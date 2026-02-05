@@ -58,6 +58,7 @@ DASHBOARD_HTML = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yapass Command Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -190,11 +191,46 @@ DASHBOARD_HTML = """
             {% endfor %}
         </div>
 
+        <div class="card" style="grid-column: span 2;">
+            <canvas id="tempChart"></canvas>
+        </div>
+
         <footer style="margin-top: 40px; font-size: 0.8rem; text-align: center; color: #484f58;">
             Ostatnia aktualizacja: {{ now }} | Auto-refresh co 10s
         </footer>
     </div>
     <script>setTimeout(function(){ location.reload(); }, 10000);</script>
+    <script>
+        const ctx = document.getElementById('tempChart').getContext('2d');
+        const tempChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['12:00', '12:15', '12:30', '12:45', '13:00'], // Przykładowe dane
+                datasets: [{
+                    label: 'Temperatura CPU (°C)',
+                    data: [45, 48, 52, 49, 50], // Przykładowe dane
+                    borderColor: '#58a6ff',
+                    backgroundColor: 'rgba(88, 166, 255, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: false, grid: { color: '#30363d' } },
+                    x: { grid: { color: '#30363d' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#c9d1d9' } }
+                }
+            }
+        });
+
+        // Twoja stara funkcja przeładowania strony może zostać pod spodem:
+        setTimeout(function(){ location.reload(); }, 60000);
+    </script>
 </body>
 </html>
 """
