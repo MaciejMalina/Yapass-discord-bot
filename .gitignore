@@ -1,0 +1,13 @@
+# Sekrety i klucze
+.env
+credentials.json
+token.json
+
+# Dane bazy i logi
+bot_data.db
+bot.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
