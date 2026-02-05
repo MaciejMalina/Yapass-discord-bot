@@ -62,93 +62,63 @@ DASHBOARD_HTML = """
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0b0e14; 
-            --card: #161b22; 
-            --accent: #58a6ff; 
-            --text: #c9d1d9; 
-            --border: #30363d; 
-            --todo-bg: #1c2128; 
+            --bg: #0b0e14; --card: #161b22; --accent: #58a6ff; 
+            --text: #c9d1d9; --border: #30363d; --todo-bg: #1c2128;
+            --success: #238636; --warning: #d29922;
         }
         body { 
-            font-family: 'Outfit', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
+            font-family: 'Outfit', sans-serif; background: var(--bg); 
+            color: var(--text); margin: 0; padding: 20px; line-height: 1.5;
         }
-        .container { max-width: 1100px; margin: auto; }
+        .container { max-width: 1200px; margin: auto; }
         
         header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-            padding-bottom: 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px;
         }
         .status-badge { 
-            background: #238636; 
-            color: white; 
-            padding: 5px 15px; 
-            border-radius: 20px; 
-            font-size: 0.85rem; 
+            background: var(--success); color: white; padding: 6px 16px; 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600;
         }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 20px; 
-            margin: 25px 0; 
+        .grid-stats { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; margin-bottom: 30px; 
         }
         .card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            padding: 20px; 
-            border-radius: 12px; 
+            background: var(--card); border: 1px solid var(--border); 
+            padding: 20px; border-radius: 12px; position: relative;
         }
-        .label { color: #8b949e; font-size: 0.9rem; margin-bottom: 10px; }
-        .value { font-size: 1.8rem; font-weight: 600; color: var(--accent); }
+        .card-chart { grid-column: 1 / -1; min-height: 350px; }
+        
+        .label { color: #8b949e; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .value { font-size: 2rem; font-weight: 600; color: var(--accent); }
+        .unit { font-size: 1rem; color: #8b949e; }
 
-        /* TODO Section */
+        h2 { border-left: 4px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; font-size: 1.4rem; }
+
         .todo-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 20px; 
-            margin-bottom: 40px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 20px; margin-bottom: 40px; 
         }
         .todo-card { 
-            background: var(--todo-bg); 
-            border-left: 4px solid var(--accent); 
-            padding: 15px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border); 
+            background: var(--todo-bg); border: 1px solid var(--border);
+            border-top: 4px solid var(--accent); padding: 20px; border-radius: 8px; 
         }
-        .todo-title { 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            color: var(--accent); 
-            margin-bottom: 12px; 
-            border-bottom: 1px solid var(--border); 
-            padding-bottom: 5px;
-        }
+        .todo-title { font-weight: 600; color: var(--accent); margin-bottom: 15px; font-size: 1.1rem; }
         .todo-list { list-style: none; padding: 0; margin: 0; }
-        .todo-item { 
-            padding: 6px 0; 
-            border-bottom: 1px solid #30363d33; 
-            font-size: 0.95rem; 
-        }
-        .todo-user { color: #8b949e; font-size: 0.8rem; font-style: italic; }
+        .todo-item { padding: 8px 0; border-bottom: 1px solid #30363d55; display: flex; justify-content: space-between; }
+        .todo-user { color: #8b949e; font-size: 0.8rem; }
 
         .logs-container { 
-            background: #010409; 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            padding: 20px; 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 0.85rem; 
-            height: 350px; 
-            overflow-y: auto; 
+            background: #010409; border: 1px solid var(--border); border-radius: 12px; 
+            padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; 
+            max-height: 400px; overflow-y: auto; white-space: pre-wrap;
         }
-        .log-entry { border-bottom: 1px solid #161b22; padding: 5px 0; }
+        .log-entry { padding: 4px 0; border-bottom: 1px solid #161b22; color: #8b949e; }
+        .log-entry:first-child { color: var(--accent); font-weight: bold; }
+
+        footer { margin-top: 60px; padding: 20px; border-top: 1px solid var(--border); text-align: center; color: #484f58; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -156,27 +126,33 @@ DASHBOARD_HTML = """
         <header>
             <div>
                 <h1 style="margin:0;">Yapass Command Center</h1>
-                <p style="color: #8b949e; margin:5px 0;">Host: Raspberry Pi 4B | Port: 5000</p>
+                <p style="color: #8b949e; margin:5px 0;">Raspberry Pi 4B Nodes | Monitoring v2.1</p>
             </div>
-            <div class="status-badge">● ONLINE</div>
+            <div class="status-badge">● SYSTEM ONLINE</div>
         </header>
 
-        <div class="grid">
-            <div class="card"><div class="label">CPU LOAD</div><div class="value">{{ cpu }}%</div></div>
-            <div class="card"><div class="label">RAM USAGE</div><div class="value">{{ ram }}%</div></div>
-            <div class="card"><div class="label">TEMPERATURE</div><div class="value" style="color:#d29922">{{ temp }}°C</div></div>
-            <div class="card"><div class="label">UPTIME</div><div class="value" style="font-size: 1.1rem;">{{ uptime }}</div></div>
+        <div class="grid-stats">
+            <div class="card"><div class="label">Obciążenie CPU</div><div class="value">{{ cpu }}<span class="unit">%</span></div></div>
+            <div class="card"><div class="label">Pamięć RAM</div><div class="value">{{ ram }}<span class="unit">%</span></div></div>
+            <div class="card"><div class="label">Temperatura SoC</div><div class="value" style="color:var(--warning)">{{ temp }}<span class="unit">°C</span></div></div>
+            <div class="card"><div class="label">System Uptime</div><div class="value" style="font-size: 1.2rem;">{{ uptime }}</div></div>
+            
+            <div class="card card-chart">
+                <div class="label">Telemetria Temperatury (Live)</div>
+                <div style="height: 300px;"><canvas id="tempChart"></canvas></div>
+            </div>
         </div>
 
-        <h2 style="border-left: 4px solid var(--accent); padding-left: 15px;">📋 Listy TODO (Podgląd)</h2>
+        <h2>📋 Aktywne Listy TODO</h2>
         <div class="todo-grid">
             {% for category, items in todo_data.items() %}
             <div class="todo-card">
-                <div class="todo-title">{{ category }}</div>
+                <div class="todo-title">{{ category | upper }}</div>
                 <ul class="todo-list">
                     {% for item in items %}
                     <li class="todo-item">
-                        {{ item.text }} <span class="todo-user">(@{{ item.user }})</span>
+                        <span>{{ item.text }}</span>
+                        <span class="todo-user">@{{ item.user }}</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -184,52 +160,57 @@ DASHBOARD_HTML = """
             {% endfor %}
         </div>
 
-        <h2 style="border-left: 4px solid var(--accent); padding-left: 15px;">📝 Logi Systemowe</h2>
+        <h2>📝 Logi Systemowe</h2>
         <div class="logs-container">
-            {% for log in logs %}
-                <div class="log-entry">{{ log }}</div>
-            {% endfor %}
+            {% for log in logs %}<div class="log-entry">{{ log }}</div>{% endfor %}
         </div>
 
-        <div class="card" style="grid-column: span 2;">
-            <canvas id="tempChart"></canvas>
-        </div>
-
-        <footer style="margin-top: 40px; font-size: 0.8rem; text-align: center; color: #484f58;">
-            Ostatnia aktualizacja: {{ now }} | Auto-refresh co 10s
+        <footer>
+            Data odświeżenia: {{ now }} | Interwał monitoringu: 10s | Host: macmal@malinka
         </footer>
     </div>
-    <script>setTimeout(function(){ location.reload(); }, 10000);</script>
+
     <script>
+        // Inicjalizacja wykresu Chart.js
         const ctx = document.getElementById('tempChart').getContext('2d');
         const tempChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['12:00', '12:15', '12:30', '12:45', '13:00'], // Przykładowe dane
+                labels: ['12:00', '12:15', '12:30', '12:45', '13:00', '13:15'], // Przykładowe etykiety
                 datasets: [{
                     label: 'Temperatura CPU (°C)',
-                    data: [45, 48, 52, 49, 50], // Przykładowe dane
+                    data: [{{ temp }}, {{ temp|float - 1 }}, {{ temp|float + 2 }}, {{ temp }}, {{ temp|float + 1 }}, {{ temp }}],
                     borderColor: '#58a6ff',
                     backgroundColor: 'rgba(88, 166, 255, 0.1)',
+                    borderWidth: 2,
                     fill: true,
-                    tension: 0.3
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#58a6ff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: false, grid: { color: '#30363d' } },
-                    x: { grid: { color: '#30363d' } }
-                },
                 plugins: {
-                    legend: { labels: { color: '#c9d1d9' } }
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: false,
+                        grid: { color: '#30363d' },
+                        ticks: { color: '#8b949e' }
+                    },
+                    x: { 
+                        grid: { display: false },
+                        ticks: { color: '#8b949e' }
+                    }
                 }
             }
         });
 
-        // Twoja stara funkcja przeładowania strony może zostać pod spodem:
-        setTimeout(function(){ location.reload(); }, 60000);
+        // Auto-refresh Dashboardu
+        setTimeout(function(){ location.reload(); }, 10000);
     </script>
 </body>
 </html>
