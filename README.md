@@ -1,41 +1,48 @@
-# Yapass Discord Manager (RPi 4B)
+# Yapass Discord Manager (v2.7)
+Zaawansowany system automatyzacji grupy Discord, hostowany na Raspberry Pi 4B. Projekt łączy w sobie zarządzanie czasem (Google API), finanse grupowe oraz monitoring infrastruktury SRE w czasie rzeczywistym.
 
-Profesjonalny, modularny system automatyzacji grupy Discord hostowany na **Raspberry Pi 4B**. Projekt łączy zarządzanie czasem, wydatkami oraz monitoring infrastruktury w czasie rzeczywistym.
+---
+
+## Architektura i Technologie
+Projekt wykorzystuje architekturę modularną opartą na Cogs, co pozwala na pełną izolację logiki biznesowej poszczególnych modułów.
+
+* **Backend:** Python 3.11 (Asyncio)
+* **Framework:** Discord.py + Quart (Asynchroniczny Dashboard)
+* **Integracje:** Google Calendar API v3, Open-Meteo API, Nominatim Geocoding
+* **Konteneryzacja:** Docker & Docker Compose dla architektury ARM (Raspberry Pi)
+
+---
 
 ## Kluczowe Moduły (Cogs)
 
-### Harmonogram i Kalendarz (Google API)
-- **Synchronizacja z Google Calendar v3**: Dodawanie i usuwanie wydarzeń z obsługą kolizji czasowych.
-- **Daily Stand-up (09:00)**: Poranne raporty z listą obecności osób zapisanych przez reakcję ✅.
-- **Geocoding & Weather**: Automatyczna prognoza pogody dla lokalizacji eventu (Open-Meteo & Nominatim API).
+### Harmonogram i Pogoda
+Zaawansowana synchronizacja z kalendarzem Google.
 
-### Moduł Finansowy (Grupowe Rozliczenia)
-- **Zarządzanie Wydatkami**: Rejestrowanie wspólnych kosztów grupy w bazie SQLite.
-- **Automatyczne Bilansowanie**: Szybki podgląd salda wydatków dla każdego członka grupy.
+* **Inteligentne Raporty:** Codziennie o 9:00 bot analizuje wydarzenia. Jeśli kalendarz jest pusty, bot nie wysyła zbędnych powiadomień (Anti-Spam).
+* **Rich Embeds:** Powiadomienia zawierają nazwę, precyzyjną godzinę, lokalizację oraz prognozę pogody wygenerowaną na podstawie współrzędnych GPS wydarzenia.
+* **Zliczanie obecności:** System śledzenia reakcji ✅, który w raporcie porannym listuje wszystkich potwierdzonych uczestników.
 
-### System TODO
-- **Modularne Listy**: Zarządzanie wieloma listami zadań jednocześnie.
-- **Persystencja**: Pełne przechowywanie stanu zadań nawet po restarcie bota.
+### Finance & Debt Tracker
+System rozliczeń grupowych z dynamicznym podziałem kosztów.
 
-### Monitoring i SRE (Observability)
-- **Web Dashboard**: Asynchroniczny panel (Quart) wyświetlający obciążenie CPU, RAM oraz temperaturę SoC.
-- **Telemetria Live**: Dynamiczny wykres temperatury historycznej przy użyciu Chart.js.
-- **Self-healing Script**: Skrypt `healthcheck.sh` monitorujący stan kontenera Docker i temperaturę procesora.
+* **Selective Member Filtering:** Bot filtruje listę użytkowników, pokazując w menu tylko osoby mające dostęp do danego kanału tekstowego.
+* **Social Billing:** Automatyczny podział kwoty (np. za pizzę) na N wybranych osób + płatnika.
+* **System CRUD:** Pełne zarządzanie długami przez komendy `/rozlicz`, `/moje_dlugi` oraz `/oddalem`.
 
-## Stack Technologiczny
-- **Backend**: Python 3.11 (Asyncio, Discord.py, Quart)
-- **Infrastruktura**: Docker & Docker Compose (ARMv8)
-- **Baza Danych**: SQLite3 (Z rotacją logów)
-- **Frontend**: HTML5, CSS3, JavaScript (Chart.js)
+### Modularny System TODO
+* Tworzenie dedykowanych list zadań (zakupy, projekty, praca).
+* Pełna persystencja danych – zadania nie znikają po restarcie bota.
 
-## Wdrożenie (Deployment)
+### Monitoring Systemowy (SRE)
+* **Komenda `/status`:** Wyświetla aktualne zużycie CPU, RAM oraz Uptime bota.
+* **Web Dashboard:** Panel www dostępny w sieci lokalnej (port 5000), wyświetlający metryki życiowe Malinki.
 
-1. **Konfiguracja**:
-   - Skopiuj `.env.example` -> `.env` i podaj tokeny.
-   - Umieść `credentials.json` w folderze głównym.
-2. **Budujemy projekt w dockerze**:
-	`docker-compose up -d --build`
-3. **Healthcheck**:
-   - Dodaj skrypt do `crontab -e`: `*/15 * * * * /sciezka/do/projektu/healthcheck.sh`
+## Instalacja i Deployment
+1. Klonowanie i Środowisko
+`git clone https://github.com/MaciejMalina/Yapass-discord-bot.git cd Yapass-discord-bot``
 
-#Projekt Maciej Malina - 2026 
+2. Konfiguracja .env
+Utwórz plik `.env` i uzupełnij dane: DISCORD_TOKEN=twoj_token_bota CALENDAR_ID=twoj_id_kalendarza
+
+3. Uruchomienie (Docker)
+docker-compose up -d --build
