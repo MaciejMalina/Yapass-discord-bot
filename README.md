@@ -1,48 +1,41 @@
-# Discord Event & Infrastructure Manager (RPi 4B)
+# Yapass Discord Manager (RPi 4B)
 
-Profesjonalny system automatyzacji grupy Discord zintegrowany z **Google Calendar API**, oferujący zaawansowane funkcje zarządzania harmonogramem oraz monitoring infrastruktury Raspberry Pi w czasie rzeczywistym.
+Profesjonalny, modularny system automatyzacji grupy Discord hostowany na **Raspberry Pi 4B**. Projekt łączy zarządzanie czasem, wydatkami oraz monitoring infrastruktury w czasie rzeczywistym.
 
+## Kluczowe Moduły (Cogs)
 
-## Kluczowe Funkcjonalności
+### Harmonogram i Kalendarz (Google API)
+- **Synchronizacja z Google Calendar v3**: Dodawanie i usuwanie wydarzeń z obsługą kolizji czasowych.
+- **Daily Stand-up (09:00)**: Poranne raporty z listą obecności osób zapisanych przez reakcję ✅.
+- **Geocoding & Weather**: Automatyczna prognoza pogody dla lokalizacji eventu (Open-Meteo & Nominatim API).
 
-### Zarządzanie Harmonogramem (Google API)
-- **Integracja Google Calendar v3**: Automatyczne tworzenie i usuwanie wydarzeń bezpośrednio z poziomu Discorda.
-- **Inteligentne Przypomnienia**: System raportowania porannego (08:00) z precyzyjnym pingowaniem uczestników (Attendee Tracking) zapisanych za pomocą reakcji ✅.
-- **Geocoding & Weather**: Integracja z **Nominatim API** (OSM) oraz **Open-Meteo**, dostarczająca prognozę pogody dla konkretnych lokalizacji wydarzeń.
+### Moduł Finansowy (Grupowe Rozliczenia)
+- **Zarządzanie Wydatkami**: Rejestrowanie wspólnych kosztów grupy w bazie SQLite.
+- **Automatyczne Bilansowanie**: Szybki podgląd salda wydatków dla każdego członka grupy.
 
-### System Zarządzania Zadaniami (TODO)
-- **Persystencja Danych**: Wykorzystanie relacyjnej bazy danych **SQLite** do zarządzania listami zadań grupowych.
-- **Dashboard Podglądu**: Wizualizacja stanu list TODO w czasie rzeczywistym na panelu webowym.
+### System TODO
+- **Modularne Listy**: Zarządzanie wieloma listami zadań jednocześnie.
+- **Persystencja**: Pełne przechowywanie stanu zadań nawet po restarcie bota.
 
-### Monitoring Infrastruktury (SRE)
-- **Web Dashboard (Quart)**: Asynchroniczny panel telemetrii monitorujący obciążenie CPU, RAM oraz temperaturę SoC Raspberry Pi.
-- **Healthcheck & Alerty**: Skrypt monitorujący stan kontenerów Docker oraz temperaturę procesora, wysyłający krytyczne powiadomienia via **Discord Webhooks**.
-- **Wizualizacja Danych**: Wykorzystanie **Chart.js** do prezentacji trendów temperaturowych urządzenia.
+### Monitoring i SRE (Observability)
+- **Web Dashboard**: Asynchroniczny panel (Quart) wyświetlający obciążenie CPU, RAM oraz temperaturę SoC.
+- **Telemetria Live**: Dynamiczny wykres temperatury historycznej przy użyciu Chart.js.
+- **Self-healing Script**: Skrypt `healthcheck.sh` monitorujący stan kontenera Docker i temperaturę procesora.
 
-## tack Technologiczny
+## Stack Technologiczny
+- **Backend**: Python 3.11 (Asyncio, Discord.py, Quart)
+- **Infrastruktura**: Docker & Docker Compose (ARMv8)
+- **Baza Danych**: SQLite3 (Z rotacją logów)
+- **Frontend**: HTML5, CSS3, JavaScript (Chart.js)
 
-- **Język**: Python 3.11 (Asyncio, Discord.py)
-- **Web**: Quart (Asynchroniczny framework webowy), HTML5/CSS3, Chart.js
-- **DevOps**: Docker & Docker Compose (Architektura ARMv8)
-- **Baza Danych**: SQLite3
-- **Monitoring**: Bash Scripting, Cron, Linux SysFS
+## Wdrożenie (Deployment)
 
-## Szybki Start
+1. **Konfiguracja**:
+   - Skopiuj `.env.example` -> `.env` i podaj tokeny.
+   - Umieść `credentials.json` w folderze głównym.
+2. **Budujemy projekt w dockerze**:
+	`docker-compose up -d --build`
+3. **Healthcheck**:
+   - Dodaj skrypt do `crontab -e`: `*/15 * * * * /sciezka/do/projektu/healthcheck.sh`
 
-### Wymagania
-- Raspberry Pi 4B (lub dowolny host Linux z Dockerem)
-- Konto Google Cloud (z aktywnym Calendar API)
-- Token bota Discord
-
-### Instalacja
-1. Sklonuj repozytorium:
-   ```bash
-   git clone [https://github.com/MaciejMalina/Yapass-discord-bot.git](https://github.com/MaciejMalina/Yapass-discord-bot.git)
-   cd Yapass-discord-bot```
-
-2. Skonfiguruj środowisko o odpowiednie tokeny/pliki:
-- .env
-- credentials.json 
-
-3. Uruhchom system: 
-- docker-compose up -d --build
+#Projekt Maciej Malina - 2026 

@@ -7,11 +7,11 @@ TEMP=$(vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*')
 
 # 1. Sprawdź temperaturę
 if (( $(echo "$TEMP > $THRESHOLD" | bc -l) )); then
-    curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"⚠️ **ALERT TEMP**: Malinka się grzeje! Obecnie: ${TEMP}°C\"}" $WEBHOOK_URL
+    curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"**ALERT TEMP**: Malinka się grzeje! Obecnie: ${TEMP}°C\"}" $WEBHOOK_URL
 fi
 
 # 2. Sprawdź czy kontener Dockera działa
-if [ ! "$(docker ps -q -f name=yapass_bot)" ]; then
-    curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"🚨 **CRITICAL**: Kontener bota padł! Próbuję zrestartować...\"}" $WEBHOOK_URL
+if [ ! "$(docker ps -q -f name=calendar_bot)" ]; then
+    curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"**CRITICAL**: Kontener bota padł! Próbuję zrestartować...\"}" $WEBHOOK_URL
     docker-compose restart bot
 fi
