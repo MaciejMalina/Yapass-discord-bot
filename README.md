@@ -39,7 +39,7 @@ System rozliczeń grupowych z dynamicznym podziałem kosztów.
 
 ## Instalacja i Deployment
 1. Klonowanie i Środowisko
-`git clone https://github.com/MaciejMalina/Yapass-discord-bot.git cd Yapass-discord-bot``
+`git clone https://github.com/MaciejMalina/Yapass-discord-bot.git cd Yapass-discord-bot`
 
 2. Konfiguracja .env
 Utwórz plik `.env` i uzupełnij dane: DISCORD_TOKEN=twoj_token_bota CALENDAR_ID=twoj_id_kalendarza
